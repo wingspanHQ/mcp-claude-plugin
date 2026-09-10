@@ -1,0 +1,25 @@
+{
+  "name": "wingspan",
+  "owner": {
+    "name": "Wingspan Engineering",
+    "email": "engineering@wingspan.app",
+    "url": "https://www.wingspan.app"
+  },
+  "description": "The Wingspan plugin for Claude: ask about the contractors you pay, what you owe them, and what is holding up a payment.",
+  "plugins": [
+    {
+      "name": "wingspan",
+      "source": "./",
+      "description": "Ask Claude about the contractors you pay through Wingspan, what you owe them, and what is holding up a payment — then onboard contractors and log payments as drafts, with a preview before anything is written.",
+      "license": "MIT",
+      "keywords": [
+        "wingspan",
+        "contractors",
+        "payments",
+        "payables",
+        "onboarding",
+        "mcp"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "wingspan",
+  "version": "0.1.0",
+  "description": "The contractors you pay through Wingspan, what you owe them, and what is holding up a payment — plus onboarding contractors and logging payments as drafts, with a preview before anything is written.",
+  "skills": "./skills/",
+  "author": {
+    "name": "Wingspan Engineering",
+    "email": "engineering@wingspan.app"
+  },
+  "homepage": "https://github.com/wingspanHQ/mcp-claude-plugin",
+  "repository": "https://github.com/wingspanHQ/mcp-claude-plugin",
+  "license": "MIT",
+  "keywords": [
+    "wingspan",
+    "contractors",
+    "payments",
+    "payables",
+    "onboarding",
+    "mcp"
+  ]
+}
