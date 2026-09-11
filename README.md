@@ -22,10 +22,12 @@ gets paid *through* Wingspan will not find their own records here.
   insurance?"
 - "What do we owe this month?" and "what did we pay last quarter?"
 - "What happened to this payment?" — the full history of one payment.
+- "What is the next payroll run going to pay?" — as things stand today.
 - "Add these five contractors to the design retainer and invite them."
 - "Log twelve hours at $85 for this contractor, due on the 30th."
+- "Release those drafts so the contractors can see them."
 
-The last two write to your Wingspan account, and Claude always shows you a
+The last three write to your Wingspan account, and Claude always shows you a
 preview of exactly what it would do and waits for you to approve it.
 
 ## Install
@@ -54,10 +56,10 @@ sign-in sees, and nothing more.
 This repository also ships a Codex plugin manifest carrying the eight skills.
 Codex does not read the connection from this plugin, so a Codex user adds the
 Wingspan MCP server themselves, as an HTTP server at
-`https://api.wingspan.app/mcp-api-v3` with OAuth, and then signs in the same
+`https://api.wingspan.app/v3/mcp` with OAuth, and then signs in the same
 way.
 
-## The eight tools
+## The ten tools
 
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
@@ -67,8 +69,10 @@ way.
 | `search_requirements` | What must a contractor satisfy before we can pay them? | Reads |
 | `search_payables` | What do we owe, and what have we paid? | Reads |
 | `get_payable` | What happened to this one payment? | Reads |
+| `get_payroll_preview` | What would the next payroll run pay, as things stand today? | Reads |
 | `create_contractors` | Create contractors, assign an existing engagement, send invites. | **Writes** |
 | `create_payables` | Log payments as drafts. | **Writes** |
+| `open_payables` | Release draft payables so contractors can see them. | **Writes** |
 
 Full detail, including every filter and the rules the tools follow:
 [`docs/tool-surface.md`](docs/tool-surface.md).
@@ -88,13 +92,20 @@ nowhere in a conversation to complete one. The same applies to creating or
 rotating an API key and to changing who can access your account.
 
 **Payments are created as drafts.** `create_payables` stops at a draft your
-contractor cannot see, with no payment scheduled. Opening it, approving it and
-paying it happen in the Wingspan app.
+contractor cannot see, with no payment scheduled. `open_payables` releases it,
+which is what shows it to the contractor. Approving it and paying it happen in
+the Wingspan app.
 
 **Setup stays in the app.** Creating engagements, groups, worksites, custom
 fields, rate cards and requirement definitions; attaching a requirement;
-approving or rejecting what a contractor submitted; payroll runs and funding
-sources; invoices and accounting integrations.
+approving or rejecting what a contractor submitted; starting a payroll run and
+choosing a funding source; invoices and accounting integrations.
+
+**The payroll preview is today's position, not a prediction.** It shows what the
+next run would pay against your records as they stand when you ask. It does not
+model what changes before the run actually happens — a contractor finishing
+their paperwork, a draft being opened or approved, an amount edited, a payment
+cancelled. Read it as a snapshot, and read it again closer to the run.
 
 **The banking rail is not visible.** The tools report what the Payables screen
 reports, which stops at the date a deposit was confirmed. A confirmed deposit

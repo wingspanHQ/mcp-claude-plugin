@@ -32,7 +32,7 @@ what someone owes you, they cannot answer it.
 
 Longer definitions: `${CLAUDE_PLUGIN_ROOT}/skills/using-wingspan-tools/glossary.md`
 
-## The eight tools
+## The ten tools
 
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
@@ -42,8 +42,10 @@ Longer definitions: `${CLAUDE_PLUGIN_ROOT}/skills/using-wingspan-tools/glossary.
 | `search_requirements` | What must a contractor satisfy before we can pay them? | Reads |
 | `search_payables` | What do we owe, and what have we paid? | Reads |
 | `get_payable` | What happened to this one payment? | Reads |
+| `get_payroll_preview` | What would the next payroll run pay, as things stand today? | Reads |
 | `create_contractors` | Create contractors, assign an engagement, send invites. | **Writes** |
 | `create_payables` | Log payments as drafts. | **Writes** |
+| `open_payables` | Release drafts so contractors can see them. | **Writes** |
 
 In a tool list these appear as `mcp__plugin_wingspan_wingspan__who_am_i` and so
 on. Reason about the short names above.
@@ -68,7 +70,7 @@ how many rows came back, how the list was sorted, and what to do next. It also
 warns about things that are easy to misread, such as a filter that cannot
 return what the user expects. Pass that on rather than dropping it.
 
-**Preview, show, confirm, then apply.** Both write tools default to
+**Preview, show, confirm, then apply.** All three write tools default to
 `mode: "preview"`, which changes nothing: it looks up every id, checks every
 row, and reports exactly what applying would do. Always preview first, show
 that preview to the user in full, and wait for them to say yes. Only then call
@@ -76,20 +78,26 @@ again with `mode: "apply"` and a `requestId` you have not used before. Never
 apply on your own initiative, and never apply without having previewed the same
 rows.
 
-**Reuse `ref`, and pick a fresh `requestId` per attempt.** Each row in a write
-call has a `ref`, your own label for that row. Results come back by `ref`, and
-the safety mechanism that stops a retry from creating duplicates is built from
-`ref` plus `requestId` — so send the *same* refs on apply that you sent on
-preview. Retrying an apply with the same `requestId` and the same refs returns
-the result of the original writes; nothing new is created. A genuinely new
-attempt gets a new `requestId`.
+**Reuse `ref`, and pick a fresh `requestId` per attempt.** Each row in a
+`create_contractors` or `create_payables` call has a `ref`, your own label for
+that row. Results come back by `ref`, and the safety mechanism that stops a
+retry from creating duplicates is built from `ref` plus `requestId` — so send
+the *same* refs on apply that you sent on preview. Retrying an apply with the
+same `requestId` and the same refs returns the result of the original writes;
+nothing new is created. A genuinely new attempt gets a new `requestId`.
+
+`open_payables` works the same way but has no `ref`: its rows are payments that
+already exist, so it reports each one by `payableId`, and that id is what its
+retry key is built from. Listing the same `payableId` twice in one call is
+refused.
 
 **Amounts are in dollars.** `1200.50` means one thousand two hundred dollars
 and fifty cents. Never send cents.
 
 **Payments are created as drafts.** `create_payables` stops at a draft the
-contractor cannot see, with no payment scheduled. Opening it, approving it and
-paying it happen in the Wingspan app.
+contractor cannot see, with no payment scheduled. `open_payables` releases it,
+which is what shows it to the contractor. Approving it and paying it happen in
+the Wingspan app.
 
 **Some things are deliberately out of reach.** Any action Wingspan protects with
 an extra identity challenge — paying a payable, paying an invoice, moving money
@@ -98,7 +106,7 @@ all, because there is nowhere in this conversation to complete that challenge.
 Say so plainly and point the user at the Wingspan app rather than looking for a
 workaround.
 
-**Child accounts.** Seven of the eight tools take an optional `accountId`,
+**Child accounts.** Nine of the ten tools take an optional `accountId`,
 which acts as one child account of an organization instead of the signed-in
 account. `who_am_i` takes no arguments at all. Only use `accountId` when the
 user names a specific child account; `who_am_i` lists the ones reachable.
@@ -128,8 +136,10 @@ it. Tell the user which screen to go to instead.
   or requirement definitions.
 - Attaching a requirement to an engagement or a group, and approving,
   rejecting, resetting or renewing one contractor's requirement.
-- Opening, approving, scheduling, cancelling or paying a payable; funding
-  sources; payroll runs; invoices; payment splits; accounting integrations.
+- Approving, scheduling, cancelling or paying a payable; funding sources;
+  starting a payroll run; invoices; payment splits; accounting integrations.
+  Releasing a draft is the one step here that is not app work — that is
+  `open_payables`.
 - Re-sending, retargeting or cancelling an invite.
 - Everything the contractor does themselves: signing up, signing a document,
   uploading a certificate, verifying their identity, adding a payout method.

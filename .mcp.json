@@ -2,7 +2,7 @@
   "mcpServers": {
     "wingspan": {
       "type": "http",
-      "url": "https://api.wingspan.app/mcp-api-v3",
+      "url": "https://api.wingspan.app/v3/mcp",
       "oauth": {
         "scopes": "offline_access",
         "authServerMetadataUrl": "https://api.wingspan.app/.well-known/oauth-authorization-server"

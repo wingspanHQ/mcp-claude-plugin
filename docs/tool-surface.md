@@ -9,7 +9,7 @@ assigned to; a **payable** is one payment owed to one contractor; a
 **requirement** is something a contractor must satisfy before they can be
 paid.
 
-## The eight tools
+## The ten tools
 
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
@@ -19,8 +19,10 @@ paid.
 | `search_requirements` | What must a contractor satisfy before I can pay them, and which of those actually block? Lists the payer's requirement definitions. | Reads |
 | `search_payables` | What do I owe, or have I paid, and which payments match "X"? Lists or searches the Payables views; sorted and paginated, with a summary for the whole filtered set when totals are available. | Reads |
 | `get_payable` | What happened to payment Y? One payment in full, in the detail panel's own words, with its activity timeline. | Reads |
+| `get_payroll_preview` | What would the next payroll run pay, as things stand today? When it processes, how much moves, what is funded but held on eligibility, and what gets left behind — as today's records would settle it, not as a forecast. | Reads |
 | `create_contractors` | Onboard these contractors: create each one, assign an existing engagement, send the invite. | **Writes** |
 | `create_payables` | Log payments for contractors against their engagements, as drafts. | **Writes** |
+| `open_payables` | Release draft payables so the contractor can see them: by list, by a filter over the draft view, or all of them. | **Writes** |
 
 `who_am_i` answers a question about the connection rather than about the
 business. It is there because it is the only honest way to answer "does this
@@ -42,10 +44,12 @@ first thing to run when anything looks wrong.
   batch rather than fetching it unasked, how the list is sorted and which
   fields are sortable, and that a free-text `query` makes relevance the
   primary order. The `sorting` block carries the same facts as data.
-- **Filters are the screens' own tabs.** The one addition is `search_payables`'
-  `cancelled`, because cancelled payments are hidden unless the filter asks for
-  them. What each Payables view holds, including the two kinds of row every
-  view leaves out, is written once in the `checking-payments` skill.
+- **Filters are the screens' own tabs.** Two additions, both on
+  `search_payables`: `cancelled`, because cancelled payments are hidden unless
+  the filter asks for them, and `referenceId`, which finds the payment carrying
+  an id the caller stored on it at creation. What each Payables view holds,
+  including the two kinds of row every view leaves out, is written once in the
+  `checking-payments` skill.
 - **Contractors have two separate status axes.** `status` is the tab strip, and
   it mixes the working relationship with paperwork — `incomplete` and
   `complete` are a summary of requirements. `onboarding` is the relationship
@@ -109,8 +113,8 @@ does not block.
 
 ## Writing
 
-`create_contractors` and `create_payables` change state; everything else
-reads. Both follow the same rails.
+`create_contractors`, `create_payables` and `open_payables` change state;
+everything else reads. All three follow the same rails.
 
 - **`mode` defaults to `preview`.** A preview resolves every id, validates
   every row and reports exactly what `apply` would do, without writing
@@ -124,9 +128,14 @@ reads. Both follow the same rails.
 - **Rows are identified by `ref`**, your own label. Refs and resource ids go
   into the output; names and email addresses do not, error messages included.
   Send the same refs on `apply` that you sent on `preview` — refs, not row
-  order, are what the keys are built from.
+  order, are what the keys are built from. `open_payables` is the exception: its
+  rows already have a server id, so it takes no `ref` and reports every row by
+  `payableId` instead. The same id twice in one call is refused, because both
+  copies would share a key.
 - **Fifty rows per call.** Over that is an error naming the limit, never a
-  silent truncation. These are synchronous calls, not bulk importers.
+  silent truncation. These are synchronous calls, not bulk importers. A
+  selector that matches more than fifty — `open_payables` by filter or with
+  `all: true` — is the same error rather than a truncated batch.
 
 `create_contractors` invites everyone not yet on board: the contractors it
 created, and any that already existed but never came on board. That second
@@ -135,8 +144,9 @@ the records the first attempt created, reports them as skipped, and still gets
 them invited. Contractors already on board are left alone.
 
 `create_payables` stops at a draft the contractor cannot see, with no payment
-scheduled. Opening and approving happen in the Wingspan app, and paying is
-permanently out of reach here.
+scheduled. Releasing it is `open_payables`, which is what shows it to the
+contractor. Approving happens in the Wingspan app, and paying is permanently out
+of reach here.
 
 ## Two things that cannot be done differently
 
@@ -167,7 +177,11 @@ all of that in one tool call.
   them.
 - **Honest uncertainty.** Where the API cannot supply something, the tool says
   so in its note rather than inventing a value — a payable reports the dates it
-  has and no bank-arrival estimate.
+  has and no bank-arrival estimate, and the payroll preview reports the position
+  today without projecting it forward to the run. Nothing here forecasts. The
+  preview is what the next run would pay against the records as they stand, and
+  a requirement completed, a draft opened or approved, an amount edited or a
+  payment cancelled between now and then all change it.
 - **A missing section is named, not hidden.** When one part of an answer could
   not be fetched, the tool says so in its note; read the note before trusting a
   blank field.

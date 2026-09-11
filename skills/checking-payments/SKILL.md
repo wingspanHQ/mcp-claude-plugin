@@ -13,9 +13,10 @@ screen in the Wingspan app. A **contractor** is a person or business the company
 pays. An **engagement** is the named working arrangement a payment is filed
 under.
 
-Two tools cover this: `search_payables` lists and filters, `get_payable` reads
-one payment in full. Every row a search returns carries a `payableId`, and that
-is the id `get_payable` takes.
+Two tools cover most of this: `search_payables` lists and filters, `get_payable`
+reads one payment in full. Every row a search returns carries a `payableId`, and
+that is the id `get_payable` takes. A third, `get_payroll_preview`, reads what
+the next payroll run would pay as things stand today.
 
 ## Listing and searching
 
@@ -27,6 +28,7 @@ is the id `get_payable` takes.
 | `query` | Free-text search over the contractor's name, email and company, plus the invoice number. At least two characters; a full email address matches exactly. |
 | `status` | Which screen view to read: `all`, `draft`, `toApprove`, `scheduled`, `paid`, `cancelled`. |
 | `contractor` | One contractor's payments only — their `contractorId`, your external id for them, or their email. |
+| `referenceId` | The one payment carrying your own id for it, set when it was created. No two payables share one. |
 | `dueDateFrom`, `dueDateTo` | Bound the due date, as `YYYY-MM-DD`, inclusive. |
 | `paidDateFrom`, `paidDateTo` | Bound the date paid, as `YYYY-MM-DD`, inclusive. |
 | `sortBy` | `dueDate`, `createdAt`, `updatedAt`, `openedAt`, `paidAt`, `amount` or `scheduledPaymentDate`. One field per call. |
@@ -140,11 +142,22 @@ payment itself, where `get_payable` names the state Returned. A question like
 "has the bank transfer landed" or "why did the transfer fail" belongs in the
 Wingspan app, or with Wingspan support.
 
-**Payroll runs and funding sources.** A payroll run is the batch that funds and
-pays a set of approved payments, and the funding source is the account Wingspan
-debits to fund it. Neither is readable here. When a user asks why a scheduled
-batch has not gone out, or which account funded it, send them to the Payroll
-screens in the app.
+**Past payroll runs and funding sources.** A payroll run is the batch that funds
+and pays a set of approved payments, and the funding source is the account
+Wingspan debits to fund it. `get_payroll_preview` reads the *next* run before it
+goes out — when it processes, how much moves, what is funded but held on
+eligibility, and what gets left behind. Runs that have already happened, and the
+account behind any of them, are not readable here. When a user asks why a
+scheduled batch has not gone out, or which account funded it, send them to the
+Payroll screens in the app.
+
+**What the preview is worth predicting with: nothing.** It is today's data, not
+a forecast. It reports what the next run would pay if it went out against the
+records as they stand right now, and it models none of what happens between now
+and then — a contractor finishing a requirement and becoming eligible, someone
+opening or approving a draft, an amount edited, a payment cancelled, a new
+payable created. Any of those changes the answer. Report it as "as things stand
+today" and never as what the run will pay.
 
 ## Why is this not paid yet
 
@@ -170,9 +183,9 @@ unrecoverable.
 
 ## Finish these in the Wingspan app
 
-- Opening a draft, approving or unapproving a payment, rescheduling it,
-  cancelling it, and paying it.
-- Payroll runs, funding sources, invoices, payment splits and accounting
-  integrations.
+- Approving or unapproving a payment, rescheduling it, cancelling it, and
+  paying it. Releasing a draft is not app work — that is `open_payables`.
+- Starting a payroll run, funding sources, invoices, payment splits and
+  accounting integrations.
 - Resolving a dispute with a contractor.
 - Anything about a bank transfer after Wingspan has sent the payment.

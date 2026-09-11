@@ -51,6 +51,7 @@ Each row in `payments`:
 | --- | --- |
 | `contractor` | **Required.** Their email, your external id for them, or their contractor id. |
 | `ref` | Your label for this row, echoed in the result. Up to 48 printable characters, no spaces and no colon. Defaults to `row-1`, `row-2` and so on. |
+| `referenceId` | Your own id for this payable, stored on it and searchable afterwards with `search_payables`' `referenceId` filter. One per payable — two cannot share one. |
 | `engagement` | The engagement for this row, by name or id. Overrides the top-level one. |
 | `amount` | A flat amount in dollars, for example `1200.50`. |
 | `quantity` | Units worked, for example hours. Goes with `unitCost`. |
@@ -64,6 +65,15 @@ Each row in `payments`:
 
 Each entry in `lineItems` takes `description`, `amount`, `quantity`,
 `unitCost`, `unit` and `detail`, with the same meanings.
+
+**`ref` and `referenceId` are different things.** `ref` is a label for this
+call: it comes back in the result, it is what the retry key is built from, and
+it is gone once the call is done. `referenceId` is stored on the payable itself
+and is how the user finds that payment again later. A row can carry both, and
+they do not have to match. Because no two payables can share a `referenceId`,
+reusing one is refused rather than attached to a second payment — which also
+means a genuine retry of an apply is safe, but re-sending the same
+`referenceId` under a *new* `requestId` is not.
 
 ## Amounts
 
@@ -128,10 +138,11 @@ A payment created by this tool sits at draft. The contractor cannot see it and
 no payment is scheduled. Say this to the user every time, because "log a
 payment" often means "and pay it" in their head.
 
-What happens next, all of it in the Wingspan app: someone opens the draft,
-which is what shows it to the contractor; someone approves it; a payroll run
-funds and pays it. Paying is also protected by an extra identity challenge, so
-it cannot be reached from here under any circumstances.
+What happens next: `open_payables` releases the draft, which is what shows it to
+the contractor, and that is the one step available here. Approving it, and the
+payroll run that funds and pays it, happen in the Wingspan app. Paying is also
+protected by an extra identity challenge, so it cannot be reached from here
+under any circumstances.
 
 ## The warning that matters most
 
@@ -167,8 +178,9 @@ invoice is owned by Wingspan and cannot be edited here.
 
 ## Finish these in the Wingspan app
 
-- Opening a draft, approving it, scheduling it, cancelling it and paying it.
-- Payroll runs and funding sources.
+- Approving a draft, scheduling it, cancelling it and paying it. Releasing it
+  so the contractor can see it is `open_payables`, not app work.
+- Starting a payroll run, and funding sources.
 - Moving a payment to a different engagement — impossible; cancel and recreate.
 - Invoices, payment splits, deductions and accounting integrations.
 - Creating engagements, and assigning a contractor to one.

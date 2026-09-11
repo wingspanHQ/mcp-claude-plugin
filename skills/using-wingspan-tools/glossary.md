@@ -59,8 +59,11 @@ Payables screen in the Wingspan app.
 **Line item** — one priced line inside a payable: either a flat amount, or a
 quantity multiplied by a cost per unit. Amounts are in dollars.
 
-**Payroll run** — a batch that funds and pays a set of approved payables. The
-tools do not read payroll runs.
+**Payroll run** — a batch that funds and pays a set of approved payables.
+`get_payroll_preview` reads the next one before it goes out, as today's records
+would settle it; it does not model anything that changes between now and the run
+itself. Runs that have already happened, and the funding source behind any of
+them, are not read here.
 
 ## Compliance
 

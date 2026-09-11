@@ -59,7 +59,7 @@ one; otherwise it is the entry in `accounts` matching the signed-in person.
 `accounts` shows what else is reachable. A person who works with more than one
 Wingspan account has to authorize the one they mean.
 
-**The company is an organization with child accounts.** Seven of the eight
+**The company is an organization with child accounts.** Nine of the ten
 tools take an optional `accountId` that acts as one child account instead of the
 default; `who_am_i` takes no arguments at all. Use `accountId` only when the user
 names a specific child account, and take the id from `who_am_i`'s `accounts`
