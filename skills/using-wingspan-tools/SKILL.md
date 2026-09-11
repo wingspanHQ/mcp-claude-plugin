@@ -1,6 +1,7 @@
 ---
 name: using-wingspan-tools
-description: The shared rules every Wingspan tool call follows: ids, paging, previewing a write, and what the tools cannot do. Load this before any Wingspan tool call, and whenever someone asks about the people they pay through Wingspan, what they owe, onboarding paperwork, invites, invoices or payments — for example "who do we pay", "what do we owe this month", "is this contractor ready to be paid", "add these contractors", "log a payment", "why has this not been paid".
+description: >-
+  The shared rules every Wingspan tool call follows: ids, paging, previewing a write, and what the tools cannot do. Load this before any Wingspan tool call, and whenever someone asks about the people they pay through Wingspan, what they owe, onboarding paperwork, invites, invoices or payments — for example "who do we pay", "what do we owe this month", "is this contractor ready to be paid", "add these contractors", "log a payment", "why has this not been paid".
 ---
 
 # Using the Wingspan tools
@@ -142,6 +143,6 @@ it. Tell the user which screen to go to instead.
   the `finding-contractors` skill.
 - What is owed, and what happened to one payment: the `checking-payments` skill.
 - Adding contractors: the `onboarding-contractors` skill.
-- Logging payments: the `logging-payments` skill.
+- Creating draft payables: the `creating-draft-payables` skill.
 - Connection problems and wrong-account answers: the
   `troubleshooting-connection` skill.

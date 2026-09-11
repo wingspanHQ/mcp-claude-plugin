@@ -1,8 +1,9 @@
 # Wingspan for Claude
 
 Ask Claude about the contractors you pay through Wingspan, what you owe them,
-and what is holding up a payment — then onboard contractors and log payments
-without leaving the conversation.
+and what is holding up a payment — then onboard contractors and create draft
+payables without leaving the conversation. Everything it creates is a draft:
+it never sends money, and paying stays in the Wingspan app.
 
 Wingspan is a payments platform. A company that pays contractors uses it to
 bring them on board, collect their tax and compliance paperwork, and pay them.
@@ -50,9 +51,11 @@ You need a Wingspan account on the paying side, and permission to see your
 company's contractors and payments. Claude sees exactly what your own Wingspan
 sign-in sees, and nothing more.
 
-This repository also ships a Codex plugin manifest. That manifest carries the
-skills only — the eight skills described further down — and the Wingspan tools
-themselves are connected through the steps above.
+This repository also ships a Codex plugin manifest carrying the eight skills.
+Codex does not read the connection from this plugin, so a Codex user adds the
+Wingspan MCP server themselves, as an HTTP server at
+`https://api.wingspan.app/mcp-api-v3` with OAuth, and then signs in the same
+way.
 
 ## The eight tools
 
@@ -75,7 +78,7 @@ Full detail, including every filter and the rules the tools follow:
 | Run these yourself | Does |
 | --- | --- |
 | `/wingspan:connect` | Checks the connection and reports which Wingspan account the tools read, plus the signed-in person's email address when one is available. |
-| `/wingspan:blocked <requirement name>` | Lists the contractors held up by one named requirement, such as a W-9 or a certificate of insurance. |
+| `/wingspan:outstanding <requirement name>` | Lists the contractors who still have one named requirement outstanding, such as a W-9 or a certificate of insurance. Whether that blocks their payment is confirmed in the Wingspan app. |
 
 ## What it cannot do
 
@@ -125,10 +128,10 @@ table above, which only run when you ask for them.
 | Skill | Covers |
 | --- | --- |
 | `using-wingspan-tools` | The rules every tool call follows, and a glossary. |
-| `finding-contractors` | Searching the roster, and who is held up by what. |
+| `finding-contractors` | Searching the roster, and who still has which requirement outstanding. |
 | `checking-payments` | What is owed, what was paid, and one payment's history. |
 | `onboarding-contractors` | Adding contractors and inviting them. |
-| `logging-payments` | Recording payments as drafts. |
+| `creating-draft-payables` | Creating new payment obligations as drafts. |
 | `troubleshooting-connection` | Authentication errors and wrong-account answers. |
 
 ## Troubleshooting

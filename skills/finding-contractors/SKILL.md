@@ -1,9 +1,12 @@
 ---
 name: finding-contractors
-description: Find, filter and inspect the contractors a company pays through Wingspan, including who is held up by outstanding paperwork. Use for "who do we pay", "list our contractors", "find [name]", "who has not signed up yet", "who is missing their W-9", "who is blocked by the certificate of insurance", "can we pay [name]", "what is [name]'s status", "who is on this engagement".
+description: Find, filter and inspect the contractors a company pays through Wingspan, including who still has onboarding paperwork outstanding. Use for "who do we pay", "list our contractors", "find [name]", "who has not signed up yet", "who is missing their W-9", "who is blocked by the certificate of insurance", "can we pay [name]", "what is [name]'s status", "who is on this engagement".
 ---
 
 # Finding contractors
+
+The shared rules for every call — ids, paging, previewing a write, what the
+tools cannot do — are in the `using-wingspan-tools` skill. Apply them here.
 
 A **contractor** is a person or business the company pays; Wingspan also calls
 this a *payee*. An **engagement** is a named working arrangement a contractor
@@ -65,7 +68,7 @@ with `get_contractor` if you have their `contractorId`; its headline reads
 Archived. Every row that does come back carries its own `archived` field,
 whatever you filtered on.
 
-## Who is held up by a named requirement
+## Who still has a named requirement outstanding
 
 Two calls, in this order.
 

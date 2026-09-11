@@ -56,7 +56,7 @@ first thing to run when anything looks wrong.
   search cannot express exactly: it means "archived or the invite was
   rejected", and a filter cannot express "or" here, so it matches the archived
   half and the `note` says so.
-- **"Who is held up by X" is a requirement-scoped filter.**
+- **"Who still has X outstanding" is a requirement-scoped filter.**
   `search_contractors` takes `requirement` — a `requirementDefinitionId`, or a
   definition's exact name from `search_requirements`, matched
   case-insensitively — plus `requirementState`: `incomplete` by

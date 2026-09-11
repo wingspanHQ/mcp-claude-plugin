@@ -12,6 +12,6 @@ First release.
   nothing until they are applied.
 - Eight skills, six of which Claude loads on its own: `using-wingspan-tools`,
   `finding-contractors`, `checking-payments`, `onboarding-contractors`,
-  `logging-payments` and `troubleshooting-connection`.
+  `creating-draft-payables` and `troubleshooting-connection`.
 - The other two skills are commands you run yourself: `/wingspan:connect` and
-  `/wingspan:blocked <requirement name>`.
+  `/wingspan:outstanding <requirement name>`.

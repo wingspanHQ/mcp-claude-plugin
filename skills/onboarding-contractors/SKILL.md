@@ -5,6 +5,9 @@ description: Add contractors to Wingspan, assign them to an existing engagement 
 
 # Onboarding contractors
 
+The shared rules for every call — ids, paging, previewing a write, what the
+tools cannot do — are in the `using-wingspan-tools` skill. Apply them here.
+
 A **contractor** is a person or business the company pays; Wingspan also calls
 this a *payee*. An **engagement** is a named working arrangement a contractor is
 assigned to. An **invite** is the email that lets the contractor claim their own

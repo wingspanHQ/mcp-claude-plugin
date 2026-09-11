@@ -1,16 +1,18 @@
 ---
-name: blocked
-description: List the contractors held up by one named onboarding requirement, such as a W-9, a certificate of insurance or a background check. Run it with the requirement's name.
+name: outstanding
+description: List the contractors who have one named onboarding requirement outstanding, such as a W-9, a certificate of insurance or a background check. Run it with the requirement's name. It reports who has not finished the requirement; it does not confirm whose payments are blocked by it.
 disable-model-invocation: true
 argument-hint: "[requirement name]"
 ---
 
-# Who is held up by: $ARGUMENTS
+# Who still has this outstanding: $ARGUMENTS
 
 A **requirement** is something a contractor must satisfy before the company can
 pay them. The company configures each one once, and every contractor placed on
 an engagement gets their own copy. This answers "who has not finished
-$ARGUMENTS".
+$ARGUMENTS". It does not answer "whose payment is blocked": whether an
+outstanding copy blocks payment depends on where it was attached, which these
+tools do not read.
 
 If no requirement was named, list the company's requirements with
 `search_requirements` and ask which one the user means. Do not guess.
@@ -19,10 +21,12 @@ If no requirement was named, list the company's requirements with
 
 Call `search_requirements`. Match `$ARGUMENTS` against the `name` of each
 result, case-insensitively and in full. A partial name does not count as a
-match.
+match. The result is one page; if nothing on it matches and the result carries
+`pagination.nextPageArgs`, call again with those arguments and keep going until
+a match appears or there is no next page. Only then is "no match" true.
 
-- **No match.** Show the names that came back and ask which one was meant. Do
-  not substitute a similar-sounding one.
+- **No match on any page.** Show the names that came back and ask which one
+  was meant. Do not substitute a similar-sounding one.
 - **More than one match.** Show the candidates and ask. Requirement names can
   be near-identical across engagements, and answering for the wrong one is
   worse than asking.
@@ -41,20 +45,22 @@ result's `pagination.nextPageArgs`; do not fetch further pages unasked.
 
 ## Step 3 — report
 
-Lead with the count and the requirement's full name. Then list the contractors
-by name, with their onboarding state, so the user can see who has not even
-signed up yet versus who signed up and has not finished.
+Lead with the count and the requirement's full name, worded as "have this
+outstanding", not "are blocked". Then list the contractors by name, with their
+onboarding state, so the user can see who has not even signed up yet versus
+who signed up and has not finished.
+
+Always add this caveat, whatever the definition's `blocking` value says:
+whether an outstanding copy actually holds up a payment depends on where the
+requirement was attached to that contractor. A placement that is not blocking
+only tracks the copy; an engagement placement can also block eligibility while
+still allowing payment. `get_contractor` does not read that setting and treats
+every incomplete requirement as blocking, so the Wingspan app is the place to
+confirm before telling anyone their payment is or is not blocked. If the
+definition is not marked blocking, say so as well: an outstanding copy is then
+usually tracked rather than holding anyone up.
 
 Then add whichever of these applies:
-
-- **If the definition is not marked blocking**, say so: that is what Wingspan
-  reports for the definition, so an outstanding copy is usually tracked rather
-  than holding anyone up. Where the requirement was attached decides for one
-  contractor: a placement that is not blocking tracks the copy without stopping
-  a payment, and an engagement placement can also block eligibility while
-  still allowing payment. `get_contractor` does not read that setting and
-  treats every incomplete requirement as blocking, so confirm in the Wingspan
-  app before telling someone they are clear.
 - **If the user wants a different slice**, the same pair of calls answers it
   with a different `requirementState`: `pendingReview` for submitted and not
   yet reviewed, `expiring` for satisfied but about to lapse, `expired` for

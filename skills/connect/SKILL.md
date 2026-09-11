@@ -32,15 +32,6 @@ challenge stay in the Wingspan app.
 
 ## If it fails
 
-**An authentication failure** means the connection needs re-authorizing. Tell
-the user to run `/mcp`, pick the `wingspan` server, and complete the login in
-the browser. If the tool reported a request id, pass it on — that is the handle
-Wingspan support needs.
-
-**No Wingspan tools available at all** means the plugin is installed but its
-server is not connected. Point at `/mcp` to see the `wingspan` entry and its
-status. If connecting reports that the endpoint cannot be found, this account
-does not have Wingspan's Claude connection turned on; the user's Wingspan
-account team can turn it on.
-
-The `troubleshooting-connection` skill covers the rest.
+Follow the `troubleshooting-connection` skill. In short: an authentication
+failure means re-authorizing through `/mcp`; no Wingspan tools at all means the
+server is not connected, and that skill says how to tell the two apart.

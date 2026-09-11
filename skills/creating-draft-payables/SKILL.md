@@ -1,9 +1,12 @@
 ---
-name: logging-payments
-description: Record payments owed to contractors in Wingspan as drafts. Use for "log a payment", "pay [name] $500 for [work]", "record these payments", "add these payments to the [engagement] engagement", "create payables", "log 12 hours at $85 for [name]", "bill this month's work". Writes to the company's Wingspan account, so it always previews first.
+name: creating-draft-payables
+description: Create draft payables — new payment obligations to contractors — in Wingspan. Nothing is paid. Use for "log a payment", "pay [name] $500 for [work]", "record these payments", "add these payments to the [engagement] engagement", "create payables", "log 12 hours at $85 for [name]", "bill this month's work". Writes to the company's Wingspan account, so it always previews first.
 ---
 
-# Logging payments
+# Creating draft payables
+
+The shared rules for every call — ids, paging, previewing a write, what the
+tools cannot do — are in the `using-wingspan-tools` skill. Apply them here.
 
 A **payable** is one payment owed to one contractor — the row on the Payables
 screen in the Wingspan app. An **engagement** is the named working arrangement
@@ -107,10 +110,17 @@ contractor's default engagement. The preview says when that is happening, so
 show it — a user who cares which engagement a payment lands on needs to see
 that they did not name one.
 
-Because the engagement is fixed at creation, "add these payments to an
-engagement" and "log payments against this engagement" are the same request:
-this tool creates payments *under* an engagement, and never moves existing ones
-into one.
+**This tool creates new payment obligations. It never moves existing ones.**
+A payable's engagement is fixed when it is created, and no tool here edits a
+payable. So "add these payments to an engagement" is ambiguous: if the user
+means payments that already exist in Wingspan, that cannot be done from here,
+and previewing a creation would propose duplicate obligations. Before calling
+the tool, settle which one the user means. If they mean existing records,
+check with `search_payables` and say the engagement cannot be changed. If they
+mean new drafts, proceed. When the phrasing is "log", "record" or "add" a
+payment that has already been paid outside Wingspan, ask as well: a draft
+payable is a new obligation that Wingspan will expect to pay, not a record of
+money already sent.
 
 ## Everything created here is a draft
 
@@ -126,10 +136,13 @@ it cannot be reached from here under any circumstances.
 ## The warning that matters most
 
 **Eligibility is checked when a payment is opened, not when it is created.** A
-draft against a contractor whose requirements are outstanding is created
-happily and then cannot be opened. The preview flags exactly this — "onboarding
-requirements are incomplete, so this payable cannot be opened or paid until
-they are" — and that warning must reach the user, not be dropped as noise. Use
+draft against a contractor with outstanding requirements is created happily
+and may then fail to open, if any of those requirements blocks eligibility.
+Whether a given outstanding requirement blocks depends on where it was
+attached, which these tools do not read, so say "may not open" rather than
+"cannot open". The preview flags the situation — "onboarding requirements are
+incomplete, so this payable cannot be opened or paid until they are" — and
+that warning must reach the user, not be dropped as noise. Use
 `get_contractor` to say what is outstanding; the `finding-contractors` skill
 covers reading it.
 

@@ -5,6 +5,9 @@ description: Look up what a company owes its contractors through Wingspan and wh
 
 # Checking payments
 
+The shared rules for every call — ids, paging, previewing a write, what the
+tools cannot do — are in the `using-wingspan-tools` skill. Apply them here.
+
 A **payable** is one payment owed to one contractor — the row on the Payables
 screen in the Wingspan app. A **contractor** is a person or business the company
 pays. An **engagement** is the named working arrangement a payment is filed
@@ -56,6 +59,26 @@ A list normally carries a `summary` with a count and an amount total, covering
 much do we owe" instead of adding up a page, and say which filters it covers.
 When `summary` is null the totals were unavailable — say so rather than summing
 the page and presenting it as the total.
+
+A correct total over the wrong set of payments is still the wrong answer, so
+pick the view before reading the summary:
+
+- **"What do we owe?"** means approved-and-unpaid plus open-and-unapproved.
+  Read `scheduled` (approved, waiting for a payroll run) and `toApprove` (open,
+  waiting for approval) separately and report both figures with their names.
+  Do not read `all`: it includes paid, in-transit, off-platform and refunded
+  payments.
+- **Drafts are not owed yet.** `draft` payments are invisible to the contractor
+  and not scheduled. Report them as a separate line if the user asks what is
+  in the pipeline, never inside the owed figure.
+- **Partial payments are not separable here.** A partially paid payable shows
+  its full amount in whichever view holds it; the summary has no
+  remaining-balance figure. If the roster has partially paid payables, say the
+  owed figure may overstate what remains, and point to the Wingspan app for
+  the exact balance.
+- **`paid` is history, not liability.** It answers "what have we paid", and
+  only for payments paid or in transit; off-platform and refunded records sit
+  under `all`.
 
 ## The words on a row
 
