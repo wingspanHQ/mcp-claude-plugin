@@ -47,7 +47,7 @@ Longer definitions: `${CLAUDE_PLUGIN_ROOT}/skills/using-wingspan-tools/glossary.
 | `create_payables` | Log payments as drafts. | **Writes** |
 | `open_payables` | Release drafts so contractors can see them. | **Writes** |
 
-In a tool list these appear as `mcp__plugin_wingspan_wingspan__who_am_i` and so
+In a tool list these appear as `mcp__plugin_wingspan_Wingspan__who_am_i` and so
 on. Reason about the short names above.
 
 ## Rules for every call

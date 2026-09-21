@@ -32,7 +32,7 @@ Report what it says before theorising.
 ## Not authorized, or authorization expired
 
 An authentication failure means the connection needs re-authorizing. In Claude
-Code, run `/mcp`, pick the `wingspan` server, and complete the login in the
+Code, run `/mcp`, pick the `Wingspan` server, and complete the login in the
 browser. Other Claude clients have the same step under their connector or MCP
 settings.
 
@@ -94,7 +94,7 @@ more detail.
 ## When the tools are not there at all
 
 If no Wingspan tools appear, the plugin is installed but its server is not
-connected. Check `/mcp` for the `wingspan` entry and its status. If connecting
+connected. Check `/mcp` for the `Wingspan` entry and its status. If connecting
 reports that the endpoint cannot be found, this account does not have Wingspan's
 Claude connection turned on; the user's Wingspan account team can turn it on.
 
