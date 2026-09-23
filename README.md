@@ -41,7 +41,7 @@ In Claude Code:
 
 Then connect your Wingspan account:
 
-1. Run `/mcp` and choose the `Wingspan` server.
+1. Run `/mcp` and choose the `wingspan` server.
 2. Complete the Wingspan login that opens in your browser, and approve the
    access request.
 3. Run `/wingspan:connect` to confirm which Wingspan account Claude is reading.

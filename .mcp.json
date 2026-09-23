@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "Wingspan": {
+    "wingspan": {
       "type": "http",
       "url": "https://api.wingspan.app/v3/mcp",
       "oauth": {
