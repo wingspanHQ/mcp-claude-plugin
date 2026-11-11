@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Two read-only tools for the licenses and certifications contractors share:
+  `search_credentials` and `get_contractor_credentials`.
+- `search_contractors` filters by a shared credential's type, jurisdiction
+  and validity status.
+- `search_requirements` and the requirement catalogue know the credential
+  check (`CredentialCheck`).
+
 ## 0.1.0 — 2026-09-10
 
 First release.

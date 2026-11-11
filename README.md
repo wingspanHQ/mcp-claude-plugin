@@ -59,7 +59,7 @@ Wingspan MCP server themselves, as an HTTP server at
 `https://api.wingspan.app/v3/mcp` with OAuth, and then signs in the same
 way.
 
-## The ten tools
+## The twelve tools
 
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
@@ -67,6 +67,8 @@ way.
 | `search_contractors` | Who do we pay? Who matches this name? Who is held up? | Reads |
 | `get_contractor` | Can we pay this one contractor, and if not, why? | Reads |
 | `search_requirements` | What must a contractor satisfy before we can pay them? | Reads |
+| `search_credentials` | Who holds a Texas license? Whose licenses expire this quarter? | Reads |
+| `get_contractor_credentials` | Which licenses and certifications does this one contractor share with us? | Reads |
 | `search_payables` | What do we owe, and what have we paid? | Reads |
 | `get_payable` | What happened to this one payment? | Reads |
 | `get_payroll_preview` | What would the next payroll run pay, as things stand today? | Reads |

@@ -1,6 +1,6 @@
 ---
 name: finding-contractors
-description: Find, filter and inspect the contractors a company pays through Wingspan, including who still has onboarding paperwork outstanding. Use for "who do we pay", "list our contractors", "find [name]", "who has not signed up yet", "who is missing their W-9", "who is blocked by the certificate of insurance", "can we pay [name]", "what is [name]'s status", "who is on this engagement".
+description: Find, filter and inspect the contractors a company pays through Wingspan, including who still has onboarding paperwork outstanding and which licenses they share. Use for "who do we pay", "list our contractors", "find [name]", "who has not signed up yet", "who is missing their W-9", "who is blocked by the certificate of insurance", "can we pay [name]", "what is [name]'s status", "who is on this engagement", "who is licensed in Texas", "whose licenses expire this month".
 ---
 
 # Finding contractors
@@ -31,6 +31,9 @@ carries a `contractorId`, and that is the id `get_contractor` takes.
 | `batch` | Only contractors loaded by one bulk import in the Wingspan app, by that import's batch id. |
 | `requirement` | Only contractors whose copy of this requirement is in `requirementState`. |
 | `requirementState` | Which state that requirement is in. Defaults to `incomplete`. |
+| `credentialType` | Only contractors who share with the company a credential of this type, such as `InsuranceAdjusterLicense`. |
+| `credentialJurisdiction` | Only contractors who share a credential issued for this ISO 3166 code: `US-TX` for Texas, `CA-ON` for Ontario. The match is exact, so `US` does not find a Texas license. |
+| `credentialStatus` | Only contractors who share a credential in this validity state: `Active`, `Expiring` (within 30 days), `Expired`, `NotYetEffective`, `ExpirationUnknown`. |
 | `sortBy` | `createdAt` or `updatedAt`. One field per call. |
 | `sortDirection` | `asc` or `desc`. Defaults to `desc`. Refused without `sortBy`. |
 | `limit` | Rows per page, 1 to 100. Defaults to 25. |
@@ -113,6 +116,32 @@ Two things to say out loud when reporting the answer:
 The catalogue of requirement kinds, and what has to happen for each:
 `${CLAUDE_PLUGIN_ROOT}/skills/finding-contractors/requirement-types.md`
 
+## Licenses and certifications
+
+Contractors keep their licenses, certifications and registrations in a
+credential library, and each contractor decides per company whether to share
+it. Only shared credentials are visible here, and nothing is shared until the
+contractor answers.
+
+- `search_contractors` with `credentialType`, `credentialJurisdiction` and
+  `credentialStatus` answers "active contractors with a Texas adjuster
+  license". The three apply to the same credential. If the result's
+  `credentialFilter.truncated` is true, say the list can be missing
+  contractors and suggest a narrower filter.
+- `search_credentials` lists the shared credentials themselves, by `type`,
+  `jurisdiction`, `validityStatus`, `expiresAfter` and `expiresBefore`, each
+  with the contractor it belongs to. Use it for "whose licenses expire this
+  quarter".
+- `get_contractor_credentials` takes a `contractorId` and lists what that one
+  contractor shares: issuer, number, jurisdictions, dates, validity status and
+  the line "Certified accurate by <name> on <date>".
+
+`validityStatus` comes from the dates: `Expiring` means within 30 days, and
+`ExpirationUnknown` means no expiration date was found. `enteredByContractor`
+names dates the contractor typed in rather than read from the document. The
+documents themselves stay in the Wingspan app; none of these tools return them.
+Sharing, unsharing and uploading credentials are the contractor's own steps.
+
 ## When to read one contractor in full
 
 Move to `get_contractor` once the question is about one person: "can we pay
@@ -177,7 +206,8 @@ before telling the user the person does not exist.
   extending an expiry date.
 - Archiving or restoring a contractor.
 - Everything the contractor does themselves: signing up, signing, uploading a
-  document, verifying identity, adding a payout method.
+  document, verifying identity, adding a payout method, uploading or sharing a
+  credential.
 - Sharing tax information, which is usually the contractor's step; a company
   that records and verifies a contractor's taxpayer details itself also does
   that in the app.
