@@ -4,8 +4,13 @@
 
 - Two read-only tools for the licenses and certifications contractors share:
   `search_credentials` and `get_contractor_credentials`.
-- `search_contractors` filters by a shared credential's type, jurisdiction
-  and validity status.
+- `search_contractors` filters by a shared credential's type, jurisdiction,
+  status and expiration range.
+- Credential statuses use the app's words: Active (with "Expires <date>" in
+  the last 30 days), "Starts <date>", Expired and "Date missing". The status
+  filters take the app's options, "Doesn't expire" included.
+- A credential whose holder name differs from the contractor's account
+  carries a flag wherever it is returned.
 - `search_requirements` and the requirement catalogue know the credential
   check (`CredentialCheck`).
 

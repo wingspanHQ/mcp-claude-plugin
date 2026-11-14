@@ -33,7 +33,9 @@ carries a `contractorId`, and that is the id `get_contractor` takes.
 | `requirementState` | Which state that requirement is in. Defaults to `incomplete`. |
 | `credentialType` | Only contractors who share with the company a credential of this type, such as `InsuranceAdjusterLicense`. |
 | `credentialJurisdiction` | Only contractors who share a credential issued for this ISO 3166 code: `US-TX` for Texas, `CA-ON` for Ontario. The match is exact, so `US` does not find a Texas license. |
-| `credentialStatus` | Only contractors who share a credential in this validity state: `Active`, `Expiring` (within 30 days), `Expired`, `NotYetEffective`, `ExpirationUnknown`. |
+| `credentialStatus` | Only contractors who share a credential in this state, the app's status filter: `Active` (includes the ones that expire within 30 days), `ExpiresWithin30Days`, `StartsLater`, `Expired`, `DateMissing`, `DoesNotExpire`. |
+| `credentialIncludeExpiringWithin30Days` | With `credentialStatus` `Active` only: `false` leaves out the credentials that expire within 30 days. Defaults to `true`. |
+| `credentialExpiresAfter`, `credentialExpiresBefore` | Only contractors who share a credential that expires in this range, as `YYYY-MM-DD`, both ends included. A credential with no expiration date never matches. |
 | `sortBy` | `createdAt` or `updatedAt`. One field per call. |
 | `sortDirection` | `asc` or `desc`. Defaults to `desc`. Refused without `sortBy`. |
 | `limit` | Rows per page, 1 to 100. Defaults to 25. |
@@ -119,28 +121,44 @@ The catalogue of requirement kinds, and what has to happen for each:
 ## Licenses and certifications
 
 Contractors keep their licenses, certifications and registrations in a
-credential library, and each contractor decides per company whether to share
-it. Only shared credentials are visible here, and nothing is shared until the
-contractor answers.
+credential library. A contractor adds credentials by importing a document:
+Wingspan reads it, the contractor reviews what was found and imports it. Each
+contractor decides per company whether to share all their credentials,
+selected ones or none. Only shared credentials are visible here, nothing is
+shared until the contractor answers, and nothing from an import shows before
+the contractor imports it.
 
-- `search_contractors` with `credentialType`, `credentialJurisdiction` and
-  `credentialStatus` answers "active contractors with a Texas adjuster
-  license". The three apply to the same credential. If the result's
-  `credentialFilter.truncated` is true, say the list can be missing
-  contractors and suggest a narrower filter.
+- `search_contractors` with `credentialType`, `credentialJurisdiction`,
+  `credentialStatus` and `credentialExpiresAfter` / `credentialExpiresBefore`
+  answers "contractors with an Active Texas adjuster license". They all apply
+  to the same credential. If the result's `credentialFilter.truncated` is
+  true, say the list can be missing contractors and suggest a narrower
+  filter.
 - `search_credentials` lists the shared credentials themselves, by `type`,
-  `jurisdiction`, `validityStatus`, `expiresAfter` and `expiresBefore`, each
-  with the contractor it belongs to. Use it for "whose licenses expire this
-  quarter".
+  `jurisdiction`, `status`, `expiresAfter` and `expiresBefore`, each with the
+  contractor it belongs to. Use it for "whose licenses expire this quarter";
+  `status` `["ExpiresWithin30Days", "Expired"]` answers "who needs to renew".
 - `get_contractor_credentials` takes a `contractorId` and lists what that one
-  contractor shares: issuer, number, jurisdictions, dates, validity status and
-  the line "Certified accurate by <name> on <date>".
+  contractor shares: issuer, number, jurisdictions, dates, status and the
+  line "Certified accurate by <name> on <date>".
 
-`validityStatus` comes from the dates: `Expiring` means within 30 days, and
-`ExpirationUnknown` means no expiration date was found. `enteredByContractor`
-names dates the contractor typed in rather than read from the document. The
-documents themselves stay in the Wingspan app; none of these tools return them.
-Sharing, unsharing and uploading credentials are the contractor's own steps.
+Say a credential's status in the app's words. Each credential carries
+`status` (`Active`, `StartsLater`, `Expired` or `DateMissing`) and
+`statusLabel`, the app's pill: an Active credential in its last 30 days reads
+"Expires <date>" and is still Active; one that starts later reads "Starts
+<date>"; "Date missing" means no expiration date on a kind of credential that
+needs one. `expiration` reads "Expires <date>", "Doesn't expire", "This type of
+credential doesn't need an expiration date." or "None on file". Never call a
+credential "expiring", "not yet effective" or "expiration unknown".
+
+When a credential carries `holderNameFlag` ("Name doesn't match the
+contractor's legal name"), always say so with that credential: the name
+printed on it differs from the names on the contractor's account.
+`addedByContractor` names facts the contractor added when importing the
+document, because it did not print them; the app shows them as "Added by
+<first name>". The documents themselves stay in the Wingspan app; none of
+these tools return them. Importing, sharing, unsharing and archiving
+credentials are the contractor's own steps.
 
 ## When to read one contractor in full
 
@@ -206,7 +224,7 @@ before telling the user the person does not exist.
   extending an expiry date.
 - Archiving or restoring a contractor.
 - Everything the contractor does themselves: signing up, signing, uploading a
-  document, verifying identity, adding a payout method, uploading or sharing a
+  document, verifying identity, adding a payout method, importing or sharing a
   credential.
 - Sharing tax information, which is usually the contractor's step; a company
   that records and verifies a contractor's taxpayer details itself also does

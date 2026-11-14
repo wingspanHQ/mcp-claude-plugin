@@ -14,11 +14,11 @@ paid.
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
 | `who_am_i` | Does the connection work, and which account is it reading? | Reads |
-| `search_contractors` | Who do I pay, and who matches "X"? Lists or searches the Contractors table, filtered by screen tab, onboarding state, engagement, import batch, a named requirement or a credential the contractor shares (type, jurisdiction, validity status); sorted and paginated. | Reads |
+| `search_contractors` | Who do I pay, and who matches "X"? Lists or searches the Contractors table, filtered by screen tab, onboarding state, engagement, import batch, a named requirement or a credential the contractor shares (type, jurisdiction, status, expiration range); sorted and paginated. | Reads |
 | `get_contractor` | Can I pay contractor Y, and if not why? One contractor in full, in the detail screen's own words, with the screen's single alert as the verdict. | Reads |
 | `search_requirements` | What must a contractor satisfy before I can pay them, and which of those actually block? Lists the payer's requirement definitions, credential checks included. | Reads |
-| `search_credentials` | Who holds a Texas license, and whose licenses expire this quarter? Searches the licenses and certifications contractors share with the payer, by type, jurisdiction, validity status and expiration date; each row names its contractor. Paginated. | Reads |
-| `get_contractor_credentials` | Is contractor Y licensed, where, and until when? The credentials one contractor shares with the payer: their facts, validity status and the contractor's certification that the document is accurate. | Reads |
+| `search_credentials` | Who holds a Texas license, and whose licenses expire this quarter? Searches the licenses and certifications contractors share with the payer, by type, jurisdiction, status and expiration date; each row names its contractor and flags a holder name that doesn't match the contractor's. Paginated. | Reads |
+| `get_contractor_credentials` | Is contractor Y licensed, where, and until when? The credentials one contractor shares with the payer: their facts, status in the app's words, any holder-name flag and the contractor's certification that the document is accurate. | Reads |
 | `search_payables` | What do I owe, or have I paid, and which payments match "X"? Lists or searches the Payables views; sorted and paginated, with a summary for the whole filtered set when totals are available. | Reads |
 | `get_payable` | What happened to payment Y? One payment in full, in the detail panel's own words, with its activity timeline. | Reads |
 | `get_payroll_preview` | What would the next payroll run pay, as things stand today? When it processes, how much moves, what is funded but held on eligibility, and what gets left behind — as today's records would settle it, not as a forecast. | Reads |
