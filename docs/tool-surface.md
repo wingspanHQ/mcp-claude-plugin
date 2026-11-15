@@ -9,7 +9,7 @@ assigned to; a **payable** is one payment owed to one contractor; a
 **requirement** is something a contractor must satisfy before they can be
 paid.
 
-## The twelve tools
+## The thirteen tools
 
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
@@ -19,6 +19,7 @@ paid.
 | `search_requirements` | What must a contractor satisfy before I can pay them, and which of those actually block? Lists the payer's requirement definitions, credential checks included. | Reads |
 | `search_credentials` | Who holds a Texas license, and whose licenses expire this quarter? Searches the licenses and certifications contractors share with the payer, by type, jurisdiction, status and expiration date; each row names its contractor and flags a holder name that doesn't match the contractor's. Paginated. | Reads |
 | `get_contractor_credentials` | Is contractor Y licensed, where, and until when? The credentials one contractor shares with the payer: their facts, status in the app's words, any holder-name flag and the contractor's certification that the document is accurate. | Reads |
+| `get_credential_document` | What does credential Y's document actually say? The source document (PDF or image) of one credential a contractor shares with the payer, returned in the result for Claude to read, with a short line naming the credential and the file. Needs permission to open documents. | Reads |
 | `search_payables` | What do I owe, or have I paid, and which payments match "X"? Lists or searches the Payables views; sorted and paginated, with a summary for the whole filtered set when totals are available. | Reads |
 | `get_payable` | What happened to payment Y? One payment in full, in the detail panel's own words, with its activity timeline. | Reads |
 | `get_payroll_preview` | What would the next payroll run pay, as things stand today? When it processes, how much moves, what is funded but held on eligibility, and what gets left behind — as today's records would settle it, not as a forecast. | Reads |

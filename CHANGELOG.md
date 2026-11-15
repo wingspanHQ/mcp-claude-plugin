@@ -2,8 +2,10 @@
 
 ## Unreleased
 
-- Two read-only tools for the licenses and certifications contractors share:
-  `search_credentials` and `get_contractor_credentials`.
+- Three read-only tools for the licenses and certifications contractors share:
+  `search_credentials`, `get_contractor_credentials` and
+  `get_credential_document`, which returns one credential's document (PDF or
+  image) for Claude to read.
 - `search_contractors` filters by a shared credential's type, jurisdiction,
   status and expiration range.
 - Credential statuses use the app's words: Active (with "Expires <date>" in

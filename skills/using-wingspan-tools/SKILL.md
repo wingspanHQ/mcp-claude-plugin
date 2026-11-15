@@ -32,7 +32,7 @@ what someone owes you, they cannot answer it.
 
 Longer definitions: `${CLAUDE_PLUGIN_ROOT}/skills/using-wingspan-tools/glossary.md`
 
-## The twelve tools
+## The thirteen tools
 
 | Tool | What it answers | Reads or writes |
 | --- | --- | --- |
@@ -42,6 +42,7 @@ Longer definitions: `${CLAUDE_PLUGIN_ROOT}/skills/using-wingspan-tools/glossary.
 | `search_requirements` | What must a contractor satisfy before we can pay them? | Reads |
 | `search_credentials` | Who holds a Texas license? Whose licenses expire this quarter? | Reads |
 | `get_contractor_credentials` | Which licenses and certifications does this one contractor share with us? | Reads |
+| `get_credential_document` | What does this credential's document actually say? | Reads |
 | `search_payables` | What do we owe, and what have we paid? | Reads |
 | `get_payable` | What happened to this one payment? | Reads |
 | `get_payroll_preview` | What would the next payroll run pay, as things stand today? | Reads |
@@ -108,7 +109,7 @@ all, because there is nowhere in this conversation to complete that challenge.
 Say so plainly and point the user at the Wingspan app rather than looking for a
 workaround.
 
-**Child accounts.** Eleven of the twelve tools take an optional `accountId`,
+**Child accounts.** Twelve of the thirteen tools take an optional `accountId`,
 which acts as one child account of an organization instead of the signed-in
 account. `who_am_i` takes no arguments at all. Only use `accountId` when the
 user names a specific child account; `who_am_i` lists the ones reachable.
