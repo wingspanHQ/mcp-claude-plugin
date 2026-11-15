@@ -15,6 +15,10 @@
   carries a flag wherever it is returned.
 - `search_requirements` and the requirement catalogue know the credential
   check (`CredentialCheck`).
+- If the credential tools do not show, reconnect and approve the credential
+  permissions (`compliance.credential:read`, and `files.files:read` for
+  documents). A connection made before this release was not asked for them,
+  so the tools stay hidden until then.
 
 ## 0.1.0 — 2026-09-10
 

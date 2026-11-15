@@ -90,6 +90,24 @@ more detail.
 | Not a well-formed id | The id is the wrong shape. Use the id a search result carried, not one copied from elsewhere. |
 | Invalid request | The arguments contradict each other. The message says which pair; fix it and call again. |
 | The token was rejected | The authorization is no longer accepted. Re-authorize through `/mcp`. |
+| `credentialPermissionMissing` | Reading credentials needs `compliance.credential:read`. `missingOn: token`: this connection was not granted it; reconnect (below). `missingOn: role`: the user's role on the account does not include it; an admin can give a role that does (Worker Onboarding Manager or Workers Viewer). |
+| `documentAccessDenied` | Opening a credential's document needs `files.files:read` as well. Say what the tool says: "Your role can't open documents. Ask an admin if you need this one." The facts stay available. |
+
+## When the credential tools are not there
+
+`search_credentials`, `get_contractor_credentials` and
+`get_credential_document` show only for a connection that was granted the
+credential permissions: `compliance.credential:read`, and `files.files:read`
+as well for `get_credential_document`. A connection made before these tools
+existed was not asked for them, so they stay hidden and nothing prompts for
+them; the other tools keep working. If the credential tools do not show,
+reconnect and approve the credential permissions: in Claude Code, run `/mcp`,
+pick the `wingspan` server, clear its authentication and log in again in the
+browser, approving access to credentials and to documents (other Claude
+clients have the same step under their connector or MCP settings). If they still do not show, the user's role on
+the account does not include those permissions; an admin can give a role that
+does (Worker Onboarding Manager reads facts and documents; Workers Viewer reads
+facts only, so it never sees `get_credential_document`).
 
 ## When the tools are not there at all
 

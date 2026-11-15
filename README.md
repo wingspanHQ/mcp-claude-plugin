@@ -153,6 +153,15 @@ table above, which only run when you ask for them.
 **No Wingspan tools appear.** The plugin is installed but the server is not
 connected. Check `/mcp`.
 
+**The credential tools do not appear.** `search_credentials`,
+`get_contractor_credentials` and `get_credential_document` need the credential
+permissions: `compliance.credential:read`, and `files.files:read` for
+documents. A connection made before these tools existed was not asked for
+them. Reconnect — in `/mcp`, pick `wingspan`, clear its authentication and
+log in again — and approve access to credentials and documents. If they
+still do not appear, your role does not include those permissions; ask an
+admin.
+
 **Connecting reports that the endpoint cannot be found.** This account does not
 have Wingspan's Claude connection turned on. Your Wingspan account team can
 turn it on.
