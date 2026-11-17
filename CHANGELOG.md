@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+- Three read-only tools for the licenses and certifications contractors share:
+  `search_credentials`, `get_contractor_credentials` and
+  `get_credential_document`, which returns one credential's document (PDF or
+  image) for Claude to read.
+- `search_contractors` filters by a shared credential's type, jurisdiction,
+  status and expiration range.
+- Credential statuses use the app's words: Active (with "Expires <date>" in
+  the last 30 days), "Starts <date>", Expired and "Date missing". The status
+  filters take the app's options, "Doesn't expire" included.
+- A credential whose holder name differs from the contractor's account
+  carries a flag wherever it is returned.
+- `search_requirements` and the requirement catalogue know the credential
+  check (`CredentialCheck`).
+- If the credential tools do not show, reconnect and approve the credential
+  permissions (`compliance.credential:read`, and `files.files:read` for
+  documents). A connection made before this release was not asked for them,
+  so the tools stay hidden until then.
+
 ## 0.1.0 — 2026-09-10
 
 First release.
