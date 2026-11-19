@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Two read-only tools for the licenses and certifications contractors share:
+  `search_credentials`, across the roster by type, field of work, kind,
+  jurisdiction and expiration date, and `get_contractor_credentials`, for one
+  contractor.
+- If the credential tools do not show, reconnect and approve the credential
+  permission (`compliance.credential:read`). A connection made before this
+  release was not asked for it, so the tools stay hidden until then.
+
 ## 0.1.0 — 2026-09-10
 
 First release.
