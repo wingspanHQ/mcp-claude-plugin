@@ -59,7 +59,7 @@ one; otherwise it is the entry in `accounts` matching the signed-in person.
 `accounts` shows what else is reachable. A person who works with more than one
 Wingspan account has to authorize the one they mean.
 
-**The company is an organization with child accounts.** Nine of the ten
+**The company is an organization with child accounts.** Eleven of the twelve
 tools take an optional `accountId` that acts as one child account instead of the
 default; `who_am_i` takes no arguments at all. Use `accountId` only when the user
 names a specific child account, and take the id from `who_am_i`'s `accounts`
@@ -90,6 +90,18 @@ more detail.
 | Not a well-formed id | The id is the wrong shape. Use the id a search result carried, not one copied from elsewhere. |
 | Invalid request | The arguments contradict each other. The message says which pair; fix it and call again. |
 | The token was rejected | The authorization is no longer accepted. Re-authorize through `/mcp`. |
+
+## When the credential tools are not there
+
+`search_credentials` and `get_contractor_credentials` show only for a
+connection that was granted `compliance.credential:read`. A connection made
+before these tools existed was not asked for it, so they stay hidden and
+nothing prompts for it; the other tools keep working. To get them, reconnect
+and approve access to credentials: in Claude Code, run `/mcp`, pick the
+`wingspan` server, clear its authentication and log in again in the browser
+(other Claude clients have the same step under their connector or MCP
+settings). If they still do not show, the user's role on the account does not
+include that permission; an admin can change the role.
 
 ## When the tools are not there at all
 
